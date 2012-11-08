@@ -27,9 +27,9 @@ chmod -R u+w "${FOLDER_ISO_INITRD}"
 rm -rf "${FOLDER_ISO_INITRD}"
 mkdir -p "${FOLDER_ISO_INITRD}"
 
-ISO_URL="http://releases.ubuntu.com/precise/ubuntu-12.04-alternate-i386.iso"
+ISO_URL="http://releases.ubuntu.com/precise/ubuntu-12.04.1-alternate-i386.iso"
 ISO_FILENAME="${FOLDER_ISO}/`basename ${ISO_URL}`"
-ISO_MD5="bcee4c03b704a9b62988505b7d8f3069"
+ISO_MD5="b4512076d85a1056f8a35f91702d81f9"
 INITRD_FILENAME="${FOLDER_ISO}/initrd.gz"
 
 ISO_GUESTADDITIONS="/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso"
