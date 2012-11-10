@@ -27,9 +27,9 @@ chmod -R u+w "${FOLDER_ISO_INITRD}"
 rm -rf "${FOLDER_ISO_INITRD}"
 mkdir -p "${FOLDER_ISO_INITRD}"
 
-ISO_URL="http://releases.ubuntu.com/precise/ubuntu-12.04.1-alternate-i386.iso"
+ISO_URL="http://releases.ubuntu.com/precise/ubuntu-12.04.1-server-i386.iso"
 ISO_FILENAME="${FOLDER_ISO}/`basename ${ISO_URL}`"
-ISO_MD5="b4512076d85a1056f8a35f91702d81f9"
+ISO_MD5="3daaa312833a7da1e85e2a02787e4b66"
 INITRD_FILENAME="${FOLDER_ISO}/initrd.gz"
 
 ISO_GUESTADDITIONS="/Applications/VirtualBox.app/Contents/MacOS/VBoxGuestAdditions.iso"
@@ -53,7 +53,7 @@ echo "Creating Custom ISO"
 if [ ! -e "${FOLDER_ISO}/custom.iso" ]; then
 
   echo "Untarring downloaded ISO ..."
-  tar -C "${FOLDER_ISO_CUSTOM}" -xf "${ISO_FILENAME}"
+  /usr/local/bin/bsdtar -C "${FOLDER_ISO_CUSTOM}" -xvf "${ISO_FILENAME}"
 
   # backup initrd.gz
   echo "Backing up current init.rd ..."
@@ -106,7 +106,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
     --basefolder "${FOLDER_VBOX}"
 
   VBoxManage modifyvm "${BOX}" \
-    --memory 360 \
+    --memory 512 \
     --boot1 dvd \
     --boot2 disk \
     --boot3 none \
@@ -174,7 +174,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
   chmod 600 "${FOLDER_BUILD}/id_rsa"
 
   # install virtualbox guest additions
-  ssh -i "${FOLDER_BUILD}/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2222 vagrant@127.0.0.1 "sudo mount /dev/cdrom /media/cdrom; sudo sh /media/cdrom/VBoxLinuxAdditions.run; sudo umount /media/cdrom; sudo shutdown -h now"
+  ssh -i "${FOLDER_BUILD}/id_rsa" -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no -p 2222 vagrant@127.0.0.1 "sudo apt-get install linux-headers-generic && sudo mount /dev/cdrom /media/cdrom; sudo sh /media/cdrom/VBoxLinuxAdditions.run; sudo umount /media/cdrom; sudo shutdown -h now"
   echo -n "Waiting for machine to shut off "
   while VBoxManage list runningvms | grep "${BOX}" >/dev/null; do
     sleep 20
@@ -195,6 +195,7 @@ if ! VBoxManage showvminfo "${BOX}" >/dev/null 2>/dev/null; then
 fi
 
 echo "Building Vagrant Box ..."
+rm -rf ${BOX}
 vagrant package --base "${BOX}"
 
 # references:
